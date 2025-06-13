@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICT科技动态周报</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; padding: 10px; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; background: #f5f7fa; }
+.container { max-width: 100%; margin: 0 auto; }
+.header-card { background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; border-radius: 12px; color: white; text-align: center; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.insight-card { background: white; padding: 18px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.section-title { font-size: 16px; font-weight: bold; color: #2d3748; margin: 0 0 12px 0; padding: 0 5px; display: flex; align-items: center; }
+.section-bar { width: 4px; height: 18px; margin-right: 8px; border-radius: 2px; }
+.news-bar { background: linear-gradient(135deg, #38b2ac, #319795); }
+.conference-bar { background: linear-gradient(135deg, #9f7aea, #805ad5); }
+.paper-bar { background: linear-gradient(135deg, #ed8936, #dd6b20); }
+.card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; }
+.conference-card { border-left: 4px solid #9f7aea; }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 8px; }
+.card-type { font-size: 9px; padding: 3px 6px; font-weight: bold; border-radius: 6px; white-space: nowrap; }
+.news-type { background: #e6fffa; color: #234e52; border: 1px solid #81e6d9; }
+.conference-type { background: #faf5ff; color: #553c9a; border: 1px solid #c6b2f5; }
+.paper-type { background: #fef5e7; color: #9a3412; border: 1px solid #fdba74; }
+.card-title { font-size: 14px; font-weight: bold; margin: 8px 0; line-height: 1.4; }
+.card-title a { color: #1a202c; text-decoration: none; }
+.card-content { font-size: 12px; line-height: 1.5; margin: 8px 0; background: #f7fafc; padding: 8px; border-radius: 6px; }
+.card-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11px; color: #718096; }
+.conference-content { background: #f0f9ff; padding: 10px; border-radius: 6px; margin: 8px 0; border: 1px solid #93c5fd; }
+.conference-innovation { background: #ecfdf5; padding: 8px; border-radius: 6px; margin: 6px 0; border: 1px solid #86efac; }
+.conference-impact { background: #fef3c7; padding: 8px; border-radius: 6px; margin: 6px 0; border: 1px solid #fbbf24; }
+.conference-host { color: #805ad5; font-size: 11px; font-weight: bold; background: #faf5ff; padding: 2px 6px; border-radius: 4px; display: inline-block; margin: 4px 0; }
+.label { font-size: 9px; font-weight: bold; margin-bottom: 3px; text-transform: uppercase; }
+.content-label { color: #1e40af; }
+.innovation-label { color: #047857; }
+.impact-label { color: #92400e; }
+.label-text { font-size: 11px; line-height: 1.4; }
+.content-text { color: #1e3a8a; }
+.innovation-text { color: #065f46; }
+.impact-text { color: #b45309; }
+.score-high { background: linear-gradient(135deg, #e53e3e, #c53030); color: white; padding: 4px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
+.score-medium { background: linear-gradient(135deg, #ed8936, #dd6b20); color: white; padding: 4px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
+.score-normal { background: linear-gradient(135deg, #38a169, #2f855a); color: white; padding: 4px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
+.time-badge { background: #edf2f7; padding: 2px 6px; border-radius: 4px; font-weight: 500; }
+.time-frame { background: #f3f4f6; color: #374151; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 9px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header-card">
+<h1 style="margin: 0 0 10px 0; font-size: 18px;">🚀 ICT科技动态周报</h1>
+<div style="font-size: 13px; margin-bottom: 12px; opacity: 0.9;">06-06 to 06-13</div>
+<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; font-size: 11px;">
+<span style="background: rgba(255,255,255,0.25); padding: 4px 8px; border-radius: 10px;">企业动态: 26</span>
+<span style="background: rgba(255,255,255,0.25); padding: 4px 8px; border-radius: 10px;">产业会议: 21</span>
+<span style="background: rgba(255,255,255,0.25); padding: 4px 8px; border-radius: 10px;">学术论文: 7</span>
+</div>
+</div>
+
+<div class="insight-card">
+<h2 style="margin: 0 0 15px 0; font-size: 16px; color: #2d3748; font-weight: bold;">💡 深度洞察</h2>
+<div style="color: #4a5568; font-size: 13px; line-height: 1.6;">本周ICT行业动态显示，AI与云计算的深度融合成为核心趋势，NVIDIA、OpenAI和Google等巨头通过技术发布会和战略合作巩固市场领导地位。NVIDIA在COMPUTEX 2025发布的AI加速器架构提升训练效率30%，对AMD和Intel形成技术壁垒；OpenAI与Microsoft深化合作，强化Azure平台的企业AI服务能力，对AWS和Google Cloud构成威胁。Cisco和Qualcomm通过收购和产品创新加速布局数据中心和汽车领域，显示出行业竞争从单一技术向生态系统的全面扩展。量子安全和元宇宙设计工具等前沿领域也受到关注，预示未来网络安全和创意行业的潜在变革。需警惕技术落地稳定性、用户接受度及监管风险，建议持续跟踪市场份额变化和政策动态。</div>
+</div>
+
+<div class="section-title"><span class="section-bar news-bar"></span>📊 企业动态</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🔥 收购并购</div>
+<div class="score-high">9分</div>
+</div>
+<div class="card-title"><a href="https://www.channelnewsasia.com/business/qualcomm-strengthens-ai-portfolio-24-billion-alphawave-deal-5171076">Qualcomm strengthens AI portfolio with $2.4 billion Alphawave deal</a></div>
+<div class="card-content">Qualcomm agrees to acquire British semiconductor company Alphawave for $2.4 billion to enhance its AI technology portfolio.</div>
+<div class="card-meta">
+<div class="time-badge">06-09</div>
+<div style="color: #38b2ac; font-weight: bold;">Qualcomm</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🔥 收购并购</div>
+<div class="score-high">9分</div>
+</div>
+<div class="card-title"><a href="https://www.hwupgrade.it/news/mercato/qualcomm-shopping-da-2-4-miliardi-cosa-c-e-dietro-l-acquisizione-di-alphawave_139521.html">Qualcomm, shopping da 2,4 miliardi: cosa c’è dietro l'acquisizione di Alphawave?</a></div>
+<div class="card-content">Qualcomm announces the acquisition of British company Alphawave Semi for $2.4 billion to expand its presence in data centers and AI.</div>
+<div class="card-meta">
+<div class="time-badge">06-09</div>
+<div style="color: #38b2ac; font-weight: bold;">Qualcomm</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🔥 收购并购</div>
+<div class="score-high">9分</div>
+</div>
+<div class="card-title"><a href="https://www.gsmarena.com/qualcomm_to_acquire_chip_designer_alphawave_semi_for_24b-news-68171.php">Qualcomm to acquire chip designer Alphawave Semi for $2.4B</a></div>
+<div class="card-content">Qualcomm has reached an agreement to acquire British chip design firm Alphawave Semi for $2.4 billion, aiming to enhance its growth in the data center market.</div>
+<div class="card-meta">
+<div class="time-badge">06-09</div>
+<div style="color: #38b2ac; font-weight: bold;">Qualcomm</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">💼 战略合作</div>
+<div class="score-high">9分</div>
+</div>
+<div class="card-title"><a href="https://www.thehindubusinessline.com/info-tech/ericsson-secures-multi-year-managed-services-deal-with-bharti-airtel/article69673927.ece">Ericsson secures multi-year Managed Services deal with Bharti Airtel</a></div>
+<div class="card-content">Ericsson has been awarded a multi-year Network Operations Center Managed Services contract by Bharti Airtel to manage network operations across India.</div>
+<div class="card-meta">
+<div class="time-badge">06-09</div>
+<div style="color: #38b2ac; font-weight: bold;">Ericsson</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">💼 战略合作</div>
+<div class="score-high">9分</div>
+</div>
+<div class="card-title"><a href="https://www.thehindubusinessline.com/info-tech/ericsson-gets-multi-year-contract-for-operations-centre-managed-services-from-airtel/article69674329.ece">Ericsson gets multi-year contract for operations centre managed services from Airtel</a></div>
+<div class="card-content">Ericsson has secured a multi-year contract from Bharti Airtel for Network Operations Center managed services, enhancing network operations across India.</div>
+<div class="card-meta">
+<div class="time-badge">06-09</div>
+<div style="color: #38b2ac; font-weight: bold;">Ericsson</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">💼 战略合作</div>
+<div class="score-high">9分</div>
+</div>
+<div class="card-title"><a href="https://economictimes.indiatimes.com/industry/telecom/ericsson-to-manage-bharti-airtels-pan-india-network-under-new-multi-year-contract/articleshow/121719590.cms">Ericsson to manage Bharti Airtel’s pan-India network under new multi-year contract</a></div>
+<div class="card-content">Ericsson will manage Bharti Airtel's network operations across India under a new multi-year contract, covering 4G, 5G, and other technologies.</div>
+<div class="card-meta">
+<div class="time-badge">06-09</div>
+<div style="color: #38b2ac; font-weight: bold;">Ericsson</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🔥 收购并购</div>
+<div class="score-normal">7分</div>
+</div>
+<div class="card-title"><a href="https://3dnews.ru/1124153/qualcomm-dogovorilas-o-pokupke-britanskogo-startapa-alphawave-za-24-mlrd">Qualcomm договорилась о покупке канадского стартапа Alphawave за $2,4 млрд</a></div>
+<div class="card-content">Qualcomm has agreed to acquire Canadian startup Alphawave for $2.4 billion, aiming to strengthen its position in the server market with specialized technology.</div>
+<div class="card-meta">
+<div class="time-badge">06-09</div>
+<div style="color: #38b2ac; font-weight: bold;">Qualcomm</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🔥 收购并购</div>
+<div class="score-high">9分</div>
+</div>
+<div class="card-title"><a href="https://www.tomshardware.com/tech-industry/big-tech/qualcomm-acquires-alphawave-semi-for-usd2-4-billion-says-its-leading-high-speed-wired-tech-will-accelerate-data-center-expansion">Qualcomm acquires Alphawave Semi for $2.4 billion – says its leading high-speed wired tech will accelerate data center expansion</a></div>
+<div class="card-content">Qualcomm has finalized a $2.4 billion deal to acquire Alphawave Semi, focusing on leveraging its high-speed wired technology to expand in the data center sector.</div>
+<div class="card-meta">
+<div class="time-badge">06-09</div>
+<div style="color: #38b2ac; font-weight: bold;">Qualcomm</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxPN1lsSlg2c2EzUHBiaEJBai10clJfWnlqVlh5Z0d1S1RDR0JUdkl3aXlmOFRFTG5oZ0U5YWd3NkxrUGNFM0N2NnBUY0VzUkNSQlU2R1hDMGZGRnNUVWJGdHlhcXE2V1pqaGp5elpxZG4xN2tRYUd4UzJDZnJsbl9idGpQZHFKdXNEenVaSEJmQnduRjBZOUctSQ?oc=5">Cisco (CSCO) Eyes Revenue Boost with Catalyst-2026 Launch - GuruFocus</a></div>
+<div class="card-content">Cisco aims to increase revenue with the launch of its new Catalyst-2026 product, targeting enhanced networking capabilities for enterprises.</div>
+<div class="card-meta">
+<div class="time-badge">06-08</div>
+<div style="color: #38b2ac; font-weight: bold;">Cisco</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxPN1lsSlg2c2EzUHBiaEJBai10clJfWnlqVlh5Z0d1S1RDR0JUdkl3aXlmOFRFTG5oZ0U5YWd3NkxrUGNFM0N2NnBUY0VzUkNSQlU2R1hDMGZGRnNUVWJGdHlhcXE2V1pqaGp5elpxZG4xN2tRYUd4UzJDZnJsbl9idGpQZHFKdXNEenVaSEJmQnduRjBZOUctSQ?oc=5">Cisco (CSCO) Eyes Revenue Boost with Catalyst-2026 Launch</a></div>
+<div class="card-content">Cisco launches Catalyst-2026, aiming to boost revenue with new networking technology.</div>
+<div class="card-meta">
+<div class="time-badge">06-08</div>
+<div style="color: #38b2ac; font-weight: bold;">Cisco</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">💼 战略合作</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://mobilesyrup.com/2025/06/06/ericsson-carleton-university-extend-5g-network-partnership/">Ericsson, Carleton University extend 5G network partnership</a></div>
+<div class="card-content">Ericsson Canada and Carleton University have extended their multi-year, multi-million-dollar partnership to advance 5G network technologies.</div>
+<div class="card-meta">
+<div class="time-badge">06-06</div>
+<div style="color: #38b2ac; font-weight: bold;">Ericsson</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🔥 收购并购</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://www.just-auto.com/news/qualcomm-enhances-v2x-capabilities/">Qualcomm enhances V2X capabilities with Autotalks acquisition</a></div>
+<div class="card-content">Qualcomm completes acquisition of Autotalks to strengthen its vehicle-to-everything (V2X) technology, focusing on road safety and automated driving.</div>
+<div class="card-meta">
+<div class="time-badge">06-06</div>
+<div style="color: #38b2ac; font-weight: bold;">Qualcomm</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🔥 收购并购</div>
+<div class="score-normal">7分</div>
+</div>
+<div class="card-title"><a href="https://news.google.com/rss/articles/CBMi1wFBVV95cUxQdU9tT2pvajRkTWl2RFc3MUlxT1Z6QjJKOFlxMlZUZVNESnctYjZDRzFaZVR1Tk1INm42Q1gwLUUzRnplYlZLUjAxTFp6SGRWcVpKQXhCSkZLdW5ZYXJuQ2FMNWNtVHZWakxsQXY0bEYxOWJfTTY3ak13a1AzQnVyWU5iai1ib3p2QmFSS2Y0Yy1DcE1Ja0c1d1VKcVVZQm5sU1Z0NWdwRXdxNFNlWW55VlB1enZ0WXpsdTJFOFRHSk1LODBESDIyUVU4VGdmSmd4cmgwRGhaQdIB3AFBVV95cUxPbmF1MmhOSHExSTZTS2MyLXNhbUlTam9tN0JTQ1Nja0lINXlROTdiN2RoRTRmSVRHeF9nYkhONWxxbV9KRG9OMS1yZ2lhdGZfUm9LcGpyOVJfVDRKZ2ZnUzRjNTZESUlENjBVMWR4Njg2QUo2OXJtaUdJTEpYaUFqbGNZbGl1eFdyVWlYM3VnQ3VVX3RpWExITVlRc0V1a0FzS01ybERsYTdYVlZrSmtNcmQ5dC1EaVRmdHBFX0xJbTFMemV1Z1BkMHlwVU1NaE0ydzlsMk9qMHI5WnlU?oc=5">Cisco says open to 'opportunistic acquisitions' to achieve vision</a></div>
+<div class="card-content">Cisco expresses openness to opportunistic acquisitions as part of its strategic vision for growth and innovation.</div>
+<div class="card-meta">
+<div class="time-badge">06-11</div>
+<div style="color: #38b2ac; font-weight: bold;">Cisco</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">💼 战略合作</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://biztoc.com/x/eef55ee45b90c2f0">Ericsson, Supermicro Partner To Bring 5G-Powered AI To Factories, Retail And Hospitals</a></div>
+<div class="card-content">Ericsson and Super Micro Computer have entered a strategic collaboration to accelerate Edge AI deployment using Ericsson’s 5G technology.</div>
+<div class="card-meta">
+<div class="time-badge">06-10</div>
+<div style="color: #38b2ac; font-weight: bold;">Ericsson</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🔥 收购并购</div>
+<div class="score-high">9分</div>
+</div>
+<div class="card-title"><a href="https://www.theregister.com/2025/06/06/broadcom_q2_2025/">Broadcom sends VMware to record revenue, margins, as most big customers sign for private cloud bundles</a></div>
+<div class="card-content">Broadcom's acquisition of VMware drives record revenue and margin growth, with strong adoption of private cloud bundles by major customers.</div>
+<div class="card-meta">
+<div class="time-badge">06-06</div>
+<div style="color: #38b2ac; font-weight: bold;">Broadcom</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">💼 战略合作</div>
+<div class="score-normal">7分</div>
+</div>
+<div class="card-title"><a href="https://www.techradar.com/pro/why-quantum-innovation-and-cyber-resilience-go-hand-in-hand">Why quantum innovation and cyber resilience go hand in hand</a></div>
+<div class="card-content">Ciena is highlighted in discussions on quantum innovation and cyber resilience, aligning with UK government's £121 million investment in quantum technology.</div>
+<div class="card-meta">
+<div class="time-badge">06-10</div>
+<div style="color: #38b2ac; font-weight: bold;">Ciena</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://tech.slashdot.org/story/25/06/10/1557211/cisco-updates-networking-products-in-bid-to-tap-ai-fueled-demand">Cisco Updates Networking Products in Bid To Tap AI-Fueled Demand</a></div>
+<div class="card-content">Cisco is updating its networking and security products to enhance AI network speed and security, aiming to capitalize on the AI spending boom.</div>
+<div class="card-meta">
+<div class="time-badge">06-10</div>
+<div style="color: #38b2ac; font-weight: bold;">Cisco</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-normal">7分</div>
+</div>
+<div class="card-title"><a href="https://www.theregister.com/2025/06/10/cisco_live_cloud_control_news/">Cisco Borgs all its management tools into a single Cloud Control console</a></div>
+<div class="card-content">Cisco introduces Cloud Control, a unified management tool for network admins, also positioning itself as AI-relevant.</div>
+<div class="card-meta">
+<div class="time-badge">06-10</div>
+<div style="color: #38b2ac; font-weight: bold;">Cisco</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://www.zdnet.com/article/cisco-reveals-its-ai-ready-data-center-strategy-boosted-by-its-nvidia-partnership/">Cisco reveals its AI-ready data center strategy - boosted by its Nvidia partnership</a></div>
+<div class="card-content">Cisco unveils a new AI-ready data center strategy with offerings optimized for AI infrastructure, supported by its Nvidia partnership.</div>
+<div class="card-meta">
+<div class="time-badge">06-10</div>
+<div style="color: #38b2ac; font-weight: bold;">Cisco</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-normal">7分</div>
+</div>
+<div class="card-title"><a href="https://www.zdnet.com/article/how-cisco-plans-to-stop-rogue-ai-agent-attacks-inside-your-network/">How Cisco plans to stop rogue AI agent attacks inside your network</a></div>
+<div class="card-content">Cisco introduces tools to secure networks against rogue AI agent attacks, focusing on tracking and preventing internal threats.</div>
+<div class="card-meta">
+<div class="time-badge">06-10</div>
+<div style="color: #38b2ac; font-weight: bold;">Cisco</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-normal">7分</div>
+</div>
+<div class="card-title"><a href="https://www.techpowerup.com/337907/cisco-unveils-secure-network-architecture-new-smart-switches-secure-routers-and-wifi7-access-points">Cisco Unveils Secure Network Architecture: New Smart Switches, Secure Routers and WiFi7 Access Points</a></div>
+<div class="card-content">Cisco launches a new network architecture with smart switches, secure routers, and WiFi7 access points for enhanced campus and branch networks.</div>
+<div class="card-meta">
+<div class="time-badge">06-10</div>
+<div style="color: #38b2ac; font-weight: bold;">Cisco</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://www.androidcentral.com/gaming/virtual-reality/qualcomms-new-on-device-ai-chip-could-change-smart-glasses-forever">Qualcomm's new on-device AI chip could change smart glasses forever</a></div>
+<div class="card-content">Qualcomm introduces the Snapdragon AR1+ Gen 1 chip for smart glasses, featuring on-device AI capabilities to reduce reliance on phones for AI queries.</div>
+<div class="card-meta">
+<div class="time-badge">06-10</div>
+<div style="color: #38b2ac; font-weight: bold;">Qualcomm</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-high">9分</div>
+</div>
+<div class="card-title"><a href="https://www.gsmarena.com/huawei_pura_80_ultra_debuts_switchable_tele_lenses_and_1_type_main_sensor_-news-68202.php">Huawei Pura 80 Ultra debuts switchable tele lenses and 1" main sensor</a></div>
+<div class="card-content">Huawei unveiled the Pura 80 Ultra with a groundbreaking 1/1.28-inch periscope telephoto sensor and switchable dual-lens telephoto camera, marking a significant advancement...</div>
+<div class="card-meta">
+<div class="time-badge">06-11</div>
+<div style="color: #38b2ac; font-weight: bold;">Huawei</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://www.gsmarena.com/the_huawei_pura_80_pro_and_ultra_are_powered_by_kirin_9020-news-68207.php">The Huawei Pura 80 Pro+ and Ultra are powered by Kirin 9020</a></div>
+<div class="card-content">Huawei's Pura 80 Pro+ and Ultra models are confirmed to be powered by the new Kirin 9020 chipset, offering a 36% performance boost over the Pura 70 series.</div>
+<div class="card-meta">
+<div class="time-badge">06-12</div>
+<div style="color: #38b2ac; font-weight: bold;">Huawei</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">💼 战略合作</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_903e0bf6-1740-4783-ad17-3a9c2fca906f">Ericsson, Google Cloud Launch New Tool To Help Telecoms Build Faster, Smarter Networks</a></div>
+<div class="card-content">Ericsson has launched Ericsson On-Demand, a SaaS platform for core network services, in collaboration with Google Cloud to aid telecom providers.</div>
+<div class="card-meta">
+<div class="time-badge">06-12</div>
+<div style="color: #38b2ac; font-weight: bold;">Ericsson</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-type news-type">🚀 新产品技术</div>
+<div class="score-normal">7分</div>
+</div>
+<div class="card-title"><a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxOYWZaS1ZFcFVHSVZKeHpkelBELVlNcEhXdkhNUHBGNnBEY0hHTFdqQzRoZHJqTm90ZkJndl9PeVAwSFk2ZFp4T1doZWV3Sjh5S1pEc05rUFNwbzc4V1BzaXBOa1BJbkh2cGxYQ0RUaHpiRnk5ZktKcFRhcWJoQlpxzUVGRTdoZVdr?oc=5">Test and Measurement: PAWR fuses open-source mobile core with Ericsson 5G SA RAN</a></div>
+<div class="card-content">Ericsson's 5G Standalone RAN technology is integrated with an open-source mobile core in a test by PAWR, showcasing advanced network capabilities.</div>
+<div class="card-meta">
+<div class="time-badge">06-11</div>
+<div style="color: #38b2ac; font-weight: bold;">Ericsson</div>
+</div>
+</div>
+
+<div class="section-title"><span class="section-bar conference-bar"></span>🏢 产业会议</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">产品发布</div>
+<div class="score-high">9.5分</div>
+</div>
+<div class="card-title"><a href="https://www.nvidia.com/en-us/events/computex/">NVIDIA CEO Jensen Huang Keynote at COMPUTEX 2025 - AI Era Innovations</a></div>
+<div class="conference-host">NVIDIA | GTC</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">NVIDIA CEO Jensen Huang在COMPUTEX 2025发表主题演讲，揭露AI时代的新产品和技术路线图，重点展示下一代AI计算平台和解决方案。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">推出全新AI加速器架构，提升大模型训练效率达30%，支持多模态AI应用。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">巩固NVIDIA在AI芯片市场的领导地位，对AMD和Intel形成更大技术壁垒，加速AI行业应用落地。</div></div>
+<div class="card-meta"><div class="time-frame">短期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">产品发布</div>
+<div class="score-high">9.5分</div>
+</div>
+<div class="card-title"><a href="https://openai.com/devday-2025">OpenAI DevDay 2025: 新一代GPT模型发布</a></div>
+<div class="conference-host">OpenAI | OpenAI DevDay</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">OpenAI在DevDay 2025上发布新一代GPT模型，性能提升显著，支持多模态输入，推理速度提高30%，并优化了开发者API接口以支持大规模应用。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">多模态处理能力突破，支持文本、图像、语音融合；推理速度提升30%。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">将进一步巩固OpenAI在生成式AI领域的领导地位，对Google和Microsoft的AI产品形成更大压力。</div></div>
+<div class="card-meta"><div class="time-frame">短期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">产品发布</div>
+<div class="score-high">9分</div>
+</div>
+<div class="card-title"><a href="https://www.google.com/io">Project Astra - Universal AI Assistant Update</a></div>
+<div class="conference-host">Google | Google I/O</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Google在I/O 2025上展示了Project Astra的最新进展，这是一款通用AI助手，具备增强的记忆力和多模态交互能力，可实时处理复杂任务并提供上下文相关建议。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">提升了AI的记忆能力和多模态交互，支持语音、图像和文本的综合处理。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">将挑战OpenAI和Microsoft的AI助手市场，可能重新定义用户交互体验，削弱竞品用户粘性。</div></div>
+<div class="card-meta"><div class="time-frame">中期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">技术突破</div>
+<div class="score-medium">8.8分</div>
+</div>
+<div class="card-title"><a href="https://www.meta.com/connect">Meta AI驱动的元宇宙交互技术</a></div>
+<div class="conference-host">Meta | Meta Connect</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Meta在LlamaCon 2025展示AI驱动的元宇宙交互技术，利用Llama模型实现实时语音和行为模拟，提升虚拟环境中的用户互动真实感。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">Llama AI模型优化虚拟角色行为，实时生成自然语言对话，减少计算资源占用20%。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">可能重新定义元宇宙社交体验，对Google和Microsoft的AI交互技术形成挑战，推动行业标准提升。</div></div>
+<div class="card-meta"><div class="time-frame">中期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">技术突破</div>
+<div class="score-medium">8.5分</div>
+</div>
+<div class="card-title"><a href="https://aws.amazon.com/events/summits/">AWS Summit Bengaluru 2025: AI与云技术融合创新</a></div>
+<div class="conference-host">Amazon | AWS re:Invent</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">AWS Summit Bengaluru 2025展示了AWS在AI与云计算领域的最新进展，重点推出AI驱动的云服务解决方案，旨在提升企业数据处理与智能化决策能力。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">AI与云服务的深度整合，优化数据分析效率，支持实时决策。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">强化AWS在AI云服务市场的领导地位，对Microsoft Azure和Google Cloud形成技术压力。</div></div>
+<div class="card-meta"><div class="time-frame">中期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">产品发布</div>
+<div class="score-medium">8.5分</div>
+</div>
+<div class="card-title"><a href="https://www.microsoft.com/en-us/microsoft-365/copilot">Microsoft 365 Copilot和Copilot Studio更新</a></div>
+<div class="conference-host">Microsoft | Microsoft Build</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Microsoft Build 2025 keynote中，Satya Nadella宣布Microsoft 365 Copilot和Copilot Studio的重大更新，增强AI驱动的开发者工具，支持更高效的工作流定制和应用开发。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">引入AI驱动的Copilot Tuning技术，提升个性化定制能力，优化开发效率。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">强化Microsoft在AI办公领域的领导地位，对Google Workspace形成直接竞争压力。</div></div>
+<div class="card-meta"><div class="time-frame">短期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">产品发布</div>
+<div class="score-medium">8.5分</div>
+</div>
+<div class="card-title"><a href="https://www.google.com/io">Android XR Smart Glasses with Gemini AI</a></div>
+<div class="conference-host">Google | Google I/O</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Google在I/O 2025上推出了Android XR智能眼镜，集成Gemini AI，支持增强现实功能，提供实时信息叠加和交互体验，面向消费者和企业应用。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">将Gemini AI与AR技术结合，支持实时环境感知和信息交互。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">直接挑战Meta的AR设备和Apple的Vision Pro，可能重塑AR市场竞争格局。</div></div>
+<div class="card-meta"><div class="time-frame">长期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">技术突破</div>
+<div class="score-medium">8.5分</div>
+</div>
+<div class="card-title"><a href="https://www.apple.com/wwdc/">Liquid Glass 设计语言发布</a></div>
+<div class="conference-host">Apple | WWDC</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Apple 在 WWDC 2025 发布全新设计语言 Liquid Glass，统一 iOS 26、macOS 26 等平台界面风格，强调流畅性和视觉表达，旨在提升用户体验和跨设备一致性。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">Liquid Glass 引入动态材质和交互效果，提升界面流畅性与沉浸感，支持跨平台统一设计。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">将重新定义用户对 Apple 产品的视觉期待，可能迫使 Android 和 Windows 跟进类似设计趋势，提升行业 UI 标准。</div></div>
+<div class="card-meta"><div class="time-frame">中期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">技术突破</div>
+<div class="score-medium">8.5分</div>
+</div>
+<div class="card-title"><a href="https://openai.com/devday-2025/tech">OpenAI DevDay 2025: 高效推理架构公布</a></div>
+<div class="conference-host">OpenAI | OpenAI DevDay</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">OpenAI公布全新高效推理架构，降低模型运行成本约40%，同时保持高精度，适用于边缘设备和低资源环境，扩展AI应用范围。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">推理成本降低40%，支持边缘设备部署，保持高精度输出。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">降低成本将推动AI普及至中小型企业，对NVIDIA等硬件依赖型厂商形成间接竞争。</div></div>
+<div class="card-meta"><div class="time-frame">中期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">产品发布</div>
+<div class="score-medium">8.5分</div>
+</div>
+<div class="card-title"><a href="https://www.meta.com/connect">Meta Quest 新一代VR设备发布</a></div>
+<div class="conference-host">Meta | Meta Connect</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Meta Connect 2025发布新一代Meta Quest VR设备，集成更先进的眼动追踪和手势识别技术，提升沉浸式体验，支持元宇宙社交和办公场景。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">采用新型眼动追踪传感器和AI驱动的手势识别，降低延迟30%，提升交互精度。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">可能削弱Oculus竞争对手的市场份额，巩固Meta在VR硬件领域的领导地位，吸引企业客户。</div></div>
+<div class="card-meta"><div class="time-frame">短期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">产品发布</div>
+<div class="score-medium">8.5分</div>
+</div>
+<div class="card-title"><a href="https://www.cisco.com/c/en/us/solutions/hybrid-cloud.html">Cisco Hybrid Mesh Firewall 发布</a></div>
+<div class="conference-host">Cisco | Cisco Live</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Cisco Live 2025 推出 Hybrid Mesh Firewall，整合云端与本地网络安全，提供动态威胁防护，支持企业混合云环境下的无缝安全管理。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">采用 AI 驱动的动态威胁检测，优化混合云环境下的防火墙性能。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">增强 Cisco 在网络安全市场的竞争力，对 Fortinet 和 Palo Alto Networks 构成直接挑战。</div></div>
+<div class="card-meta"><div class="time-frame">短期</div><div>网络技术大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">技术突破</div>
+<div class="score-medium">8.2分</div>
+</div>
+<div class="card-title"><a href="https://github.com/features/copilot">GitHub Copilot Coding Agent发布</a></div>
+<div class="conference-host">Microsoft | Microsoft Build</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Microsoft Build 2025期间，GitHub推出全新AI编码代理Copilot Coding Agent，旨在减少开发者切换工具的频率，支持从规划到测试的全流程协作。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">实现全流程AI辅助编码，具备智能规划和协作功能，提升开发效率30%。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">对JetBrains和Google Cloud AI工具构成威胁，可能重塑开发者工具市场格局。</div></div>
+<div class="card-meta"><div class="time-frame">中期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">技术突破</div>
+<div class="score-medium">8.2分</div>
+</div>
+<div class="card-title"><a href="https://www.cisco.com/c/en/us/solutions/data-center.html">AI 与数据中心解决方案整合</a></div>
+<div class="conference-host">Cisco | Cisco Live</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Cisco Live 2025 展示 AI 技术与数据中心解决方案深度整合，提升数据处理效率，支持生成式 AI 应用，优化企业 IT 架构。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">生成式 AI 算法优化数据中心资源分配，提升 30% 能效。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">推动 Cisco 在 AI 驱动数据中心领域领先，可能削弱 Dell 和 HPE 的市场份额。</div></div>
+<div class="card-meta"><div class="time-frame">中期</div><div>网络技术大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">技术突破</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://www.google.com/io">Veo 3 - Advanced AI Video Generation Tool</a></div>
+<div class="conference-host">Google | Google I/O</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Google推出了Veo 3，一款先进的AI视频生成工具，在I/O 2025开幕影片中展示其能力，可生成高质量视频内容，面向创作者和企业用户。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">Veo 3提升了AI生成视频的真实度和细节，支持复杂场景渲染。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">将对Adobe和Canva等内容创作工具构成威胁，可能改变视频制作行业格局。</div></div>
+<div class="card-meta"><div class="time-frame">中期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">产品发布</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://www.apple.com/ios/">iOS 26 功能更新与 Apple Intelligence 增强</a></div>
+<div class="conference-host">Apple | WWDC</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">WWDC 2025 推出 iOS 26，集成更智能的 Apple Intelligence 功能，包括视觉智能和通话工具优化，提升设备智能化水平，覆盖 iPhone、iPad 等设备。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">视觉智能技术提升图像识别能力，通话工具新增智能功能，优化用户交互效率。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">强化 Apple 在 AI 领域的竞争力，可能对 Google Assistant 和 Samsung Bixby 形成压力，推动行业 AI 功能升级。</div></div>
+<div class="card-meta"><div class="time-frame">短期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">战略合作</div>
+<div class="score-medium">8分</div>
+</div>
+<div class="card-title"><a href="https://openai.com/devday-2025/microsoft">OpenAI DevDay 2025: 与Microsoft深化合作</a></div>
+<div class="conference-host">OpenAI | OpenAI DevDay</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">OpenAI宣布与Microsoft深化合作，将新模型无缝集成至Azure平台，并联合推出面向企业的AI定制化解决方案，覆盖多个行业。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">无缝集成Azure平台，联合开发企业级AI定制工具。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">强化OpenAI与Microsoft联盟，对Google Cloud和AWS的企业AI市场份额构成威胁。</div></div>
+<div class="card-meta"><div class="time-frame">中期</div><div>年度大会</div></div>
+</div>
+<div class="card conference-card">
+<div class="card-header">
+<div class="card-type conference-type">战略合作</div>
+<div class="score-normal">7.8分</div>
+</div>
+<div class="card-title"><a href="https://www.microsoft.com/en-us/build">Satya Nadella与Elon Musk对话</a></div>
+<div class="conference-host">Microsoft | Microsoft Build</div>
+<div class="conference-content"><div class="label content-label">核心内容</div><div class="label-text content-text">Microsoft Build 2025期间，Satya Nadella与Elon Musk进行公开对话，探讨AI技术在企业与工业领域的应用，暗示潜在合作方向。</div></div>
+<div class="conference-innovation"><div class="label innovation-label">技术创新</div><div class="label-text innovation-text">结合Tesla和xAI的行业数据，探索AI在工业自动化中的应用场景。</div></div>
+<div class="conference-impact"><div class="label impact-label">市场影响</div><div class="label-text impact-text">可能推动Microsoft Azure在工业AI领域的渗透，对AWS和Google Cloud形成竞争
