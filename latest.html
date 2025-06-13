@@ -70,13 +70,14 @@
         .debug-info {
             margin-top: 20px;
             font-size: 12px;
-            opacity: 0.7;
-            max-height: 200px;
+            opacity: 0.8;
+            max-height: 150px;
             overflow-y: auto;
             text-align: left;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             padding: 10px;
             border-radius: 5px;
+            font-family: monospace;
         }
     </style>
 </head>
@@ -96,23 +97,18 @@
         const errorEl = document.getElementById('error-message');
         const linksEl = document.getElementById('manual-links');
         const debugEl = document.getElementById('debug-info');
-        
-        // 添加调试功能
-        const DEBUG = true;
+
         function debug(message) {
-            if (DEBUG) {
-                console.log(message);
-                debugEl.innerHTML += message + '<br>';
-                debugEl.style.display = 'block';
-            }
+            console.log(message);
+            debugEl.innerHTML += message + '\n';
+            debugEl.style.display = 'block';
         }
 
         async function getLatestReport() {
             try {
                 statusEl.textContent = '正在连接GitHub API...';
-                debug('开始获取GitHub API数据...');
+                debug('🔄 开始获取文件列表...');
                 
-                // 获取reports目录下的所有文件
                 const response = await fetch('https://api.github.com/repos/wisdom-future/ict-weekly-reports/contents/reports');
                 
                 if (!response.ok) {
@@ -121,129 +117,70 @@
                 
                 const files = await response.json();
                 statusEl.textContent = '正在分析报告文件...';
-                debug(`获取到 ${files.length} 个文件`);
+                debug(`📁 获取到 ${files.length} 个文件`);
                 
-                // 筛选HTML文件并按文件名排序
-                const htmlFiles = files
-                    .filter(file => {
-                        const isHtml = file.name.endsWith('.html');
-                        const isReport = file.name.includes('report-');
-                        debug(`文件: ${file.name} - HTML: ${isHtml}, Report: ${isReport}`);
-                        return isHtml && isReport;
-                    })
-                    .sort((a, b) => {
-                        // 更精确的排序逻辑：提取完整的日期-时间戳
-                        const extractDateTime = (filename) => {
-                            // 匹配 report-YYYY-MM-DD-HHMM.html 格式
-                            const match = filename.match(/report-(\d{4})-(\d{2})-(\d{2})-(\d{4})\.html$/);
-                            if (match) {
-                                const [, year, month, day, time] = match;
-                                return `${year}${month}${day}${time}`;
-                            }
-                            
-                            // 匹配 report-YYYY-MM-DD.html 格式
-                            const dateMatch = filename.match(/report-(\d{4})-(\d{2})-(\d{2})\.html$/);
-                            if (dateMatch) {
-                                const [, year, month, day] = dateMatch;
-                                return `${year}${month}${day}0000`;
-                            }
-                            
-                            // 匹配其他格式，返回文件名用于字符串比较
-                            return filename;
-                        };
-                        
-                        const dateTimeA = extractDateTime(a.name);
-                        const dateTimeB = extractDateTime(b.name);
-                        
-                        debug(`排序比较: ${a.name} (${dateTimeA}) vs ${b.name} (${dateTimeB})`);
-                        
-                        // 降序排列（最新的在前）
-                        return dateTimeB.localeCompare(dateTimeA);
-                    });
+                // 筛选出报告HTML文件
+                const reportFiles = files.filter(file => {
+                    const isHtml = file.name.endsWith('.html');
+                    const isReport = file.name.startsWith('report-') && file.name.match(/report-\d{4}-\d{2}-\d{2}-\d{4}\.html$/);
+                    debug(`📄 ${file.name} - 是HTML: ${isHtml}, 是报告: ${isReport}`);
+                    return isHtml && isReport;
+                });
 
-                debug(`排序后的HTML文件: ${htmlFiles.map(f => f.name).join(', ')}`);
+                debug(`\n📊 筛选出 ${reportFiles.length} 个报告文件:`);
+                reportFiles.forEach(file => debug(`   - ${file.name}`));
 
-                if (htmlFiles.length > 0) {
-                    const latestFile = htmlFiles[0];
-                    statusEl.textContent = `找到最新报告: ${latestFile.name}`;
-                    debug(`最新文件: ${latestFile.name}`);
-                    
-                    // 显示即将跳转的信息
-                    setTimeout(() => {
-                        statusEl.textContent = '正在跳转...';
-                        debug(`跳转到: ./reports/${latestFile.name}`);
-                        window.location.href = `./reports/${latestFile.name}`;
-                    }, 2000); // 增加到2秒，方便查看调试信息
-                    
-                } else {
-                    throw new Error('未找到任何报告文件');
+                if (reportFiles.length === 0) {
+                    throw new Error('未找到符合格式的报告文件');
                 }
+
+                // 简单直接的排序：按文件名降序（因为文件名格式统一，字符串比较就够了）
+                const sortedFiles = reportFiles.sort((a, b) => {
+                    debug(`🔄 比较: ${a.name} vs ${b.name}`);
+                    return b.name.localeCompare(a.name); // 降序，最新的在前
+                });
+
+                debug(`\n📋 排序后的文件列表:`);
+                sortedFiles.forEach((file, index) => {
+                    debug(`   ${index + 1}. ${file.name} ${index === 0 ? '← 最新' : ''}`);
+                });
+
+                const latestFile = sortedFiles[0];
+                statusEl.textContent = `找到最新报告: ${latestFile.name}`;
+                debug(`\n✅ 选择最新文件: ${latestFile.name}`);
+                
+                setTimeout(() => {
+                    statusEl.textContent = '正在跳转...';
+                    debug(`🚀 跳转到: ./reports/${latestFile.name}`);
+                    window.location.href = `./reports/${latestFile.name}`;
+                }, 3000); // 3秒延迟，方便查看调试信息
                 
             } catch (error) {
                 console.error('获取最新报告失败:', error);
-                debug(`错误: ${error.message}`);
-                spinnerEl.style.display = 'none';
-                statusEl.textContent = '获取失败，尝试备用方案...';
-                
-                // 备用方案：尝试基于日期的文件名
-                await tryDateBasedFiles();
+                debug(`❌ 错误: ${error.message}`);
+                showError(error.message);
             }
         }
 
-        async function tryDateBasedFiles() {
-            const today = new Date();
-            const attempts = [];
-            
-            // 生成最近7天可能的文件名，包含不同时间戳
-            for (let i = 0; i < 7; i++) {
-                const date = new Date(today);
-                date.setDate(date.getDate() - i);
-                const dateStr = date.toISOString().split('T')[0];
-                
-                // 尝试不同的时间戳格式（倒序，从最晚的时间开始）
-                const timeStamps = ['2359', '1800', '1500', '1321', '1301', '1212', '1211', '1200', '1000', '0900'];
-                for (const time of timeStamps) {
-                    attempts.push(`report-${dateStr}-${time}.html`);
-                }
-                
-                // 也尝试不带时间戳的格式
-                attempts.push(`report-${dateStr}.html`);
-            }
-            
-            statusEl.textContent = '正在尝试可能的文件名...';
-            debug(`尝试备用文件名: ${attempts.slice(0, 10).join(', ')}...`);
-            
-            for (const filename of attempts) {
-                try {
-                    const response = await fetch(`./reports/${filename}`, { method: 'HEAD' });
-                    if (response.ok) {
-                        statusEl.textContent = `找到报告: ${filename}`;
-                        debug(`备用方案成功: ${filename}`);
-                        setTimeout(() => {
-                            window.location.href = `./reports/${filename}`;
-                        }, 1000);
-                        return;
-                    }
-                } catch (error) {
-                    continue;
-                }
-            }
-            
-            // 所有尝试都失败了
-            showError();
-        }
-
-        function showError() {
+        function showError(errorMessage) {
             spinnerEl.style.display = 'none';
-            statusEl.textContent = '未能找到最新报告';
+            statusEl.textContent = '获取失败';
             errorEl.style.display = 'block';
-            errorEl.innerHTML = '可能的原因：<br>• 报告文件尚未上传<br>• 文件名格式不匹配<br>• 网络连接问题';
+            errorEl.innerHTML = `
+                错误信息: ${errorMessage}<br><br>
+                可能的原因：<br>
+                • GitHub API访问限制<br>
+                • 网络连接问题<br>
+                • 文件名格式不匹配
+            `;
             
-            // 显示手动链接选项
             linksEl.style.display = 'block';
             linksEl.innerHTML = `
                 <a href="https://github.com/wisdom-future/ict-weekly-reports/tree/main/reports" class="manual-link" target="_blank">
-                    查看所有报告
+                    手动查看所有报告
+                </a>
+                <a href="./reports/report-2025-06-13-1321.html" class="manual-link">
+                    直接访问最新报告
                 </a>
             `;
         }
