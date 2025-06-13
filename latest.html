@@ -26,6 +26,7 @@
             border-radius: 20px;
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
         }
         .spinner {
             width: 50px;
@@ -50,13 +51,22 @@
             opacity: 0.8;
             margin-bottom: 20px;
         }
-        .error {
-            color: #ff6b6b;
+        .debug-info {
             margin-top: 20px;
+            font-size: 11px;
+            opacity: 0.8;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.3;
         }
         .manual-link {
             display: inline-block;
-            margin-top: 20px;
+            margin: 10px;
             padding: 10px 20px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
@@ -67,18 +77,6 @@
         .manual-link:hover {
             background: rgba(255, 255, 255, 0.3);
         }
-        .debug-info {
-            margin-top: 20px;
-            font-size: 12px;
-            opacity: 0.8;
-            max-height: 150px;
-            overflow-y: auto;
-            text-align: left;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-        }
     </style>
 </head>
 <body>
@@ -86,17 +84,15 @@
         <div class="spinner" id="spinner"></div>
         <div class="title">ICT周报</div>
         <div class="subtitle" id="status">正在获取最新报告...</div>
-        <div id="error-message" class="error" style="display: none;"></div>
-        <div id="manual-links" style="display: none;"></div>
         <div id="debug-info" class="debug-info" style="display: none;"></div>
+        <div id="manual-links" style="display: none;"></div>
     </div>
 
     <script>
         const statusEl = document.getElementById('status');
         const spinnerEl = document.getElementById('spinner');
-        const errorEl = document.getElementById('error-message');
-        const linksEl = document.getElementById('manual-links');
         const debugEl = document.getElementById('debug-info');
+        const linksEl = document.getElementById('manual-links');
 
         function debug(message) {
             console.log(message);
@@ -104,11 +100,12 @@
             debugEl.style.display = 'block';
         }
 
-        async function getLatestReport() {
+        async function getLatestReportByTimestamp() {
             try {
-                statusEl.textContent = '正在连接GitHub API...';
-                debug('🔄 开始获取文件列表...');
+                statusEl.textContent = '正在获取文件列表...';
+                debug('🚀 开始基于时间戳获取最新报告...');
                 
+                // 获取reports目录下的所有文件
                 const response = await fetch('https://api.github.com/repos/wisdom-future/ict-weekly-reports/contents/reports');
                 
                 if (!response.ok) {
@@ -116,44 +113,90 @@
                 }
                 
                 const files = await response.json();
-                statusEl.textContent = '正在分析报告文件...';
                 debug(`📁 获取到 ${files.length} 个文件`);
                 
-                // 筛选出报告HTML文件
+                // 筛选HTML报告文件
                 const reportFiles = files.filter(file => {
-                    const isHtml = file.name.endsWith('.html');
-                    const isReport = file.name.startsWith('report-') && file.name.match(/report-\d{4}-\d{2}-\d{2}-\d{4}\.html$/);
-                    debug(`📄 ${file.name} - 是HTML: ${isHtml}, 是报告: ${isReport}`);
-                    return isHtml && isReport;
+                    return file.name.endsWith('.html') && file.name.includes('report-');
                 });
-
-                debug(`\n📊 筛选出 ${reportFiles.length} 个报告文件:`);
-                reportFiles.forEach(file => debug(`   - ${file.name}`));
-
-                if (reportFiles.length === 0) {
-                    throw new Error('未找到符合格式的报告文件');
-                }
-
-                // 简单直接的排序：按文件名降序（因为文件名格式统一，字符串比较就够了）
-                const sortedFiles = reportFiles.sort((a, b) => {
-                    debug(`🔄 比较: ${a.name} vs ${b.name}`);
-                    return b.name.localeCompare(a.name); // 降序，最新的在前
-                });
-
-                debug(`\n📋 排序后的文件列表:`);
-                sortedFiles.forEach((file, index) => {
-                    debug(`   ${index + 1}. ${file.name} ${index === 0 ? '← 最新' : ''}`);
-                });
-
-                const latestFile = sortedFiles[0];
-                statusEl.textContent = `找到最新报告: ${latestFile.name}`;
-                debug(`\n✅ 选择最新文件: ${latestFile.name}`);
                 
+                debug(`📊 筛选出 ${reportFiles.length} 个报告文件`);
+                
+                if (reportFiles.length === 0) {
+                    throw new Error('未找到报告文件');
+                }
+                
+                statusEl.textContent = '正在获取文件时间戳...';
+                
+                // 为每个文件获取最后提交时间
+                const filesWithTimestamp = [];
+                
+                for (const file of reportFiles) {
+                    try {
+                        debug(`⏱️ 获取 ${file.name} 的时间戳...`);
+                        
+                        // 获取文件的提交历史（只取最新的1个提交）
+                        const commitsResponse = await fetch(
+                            `https://api.github.com/repos/wisdom-future/ict-weekly-reports/commits?path=reports/${file.name}&per_page=1`
+                        );
+                        
+                        if (commitsResponse.ok) {
+                            const commits = await commitsResponse.json();
+                            if (commits.length > 0) {
+                                const lastCommitDate = commits[0].commit.committer.date;
+                                const timestamp = new Date(lastCommitDate).getTime();
+                                
+                                filesWithTimestamp.push({
+                                    name: file.name,
+                                    timestamp: timestamp,
+                                    date: lastCommitDate,
+                                    sha: commits[0].sha.substring(0, 7)
+                                });
+                                
+                                debug(`   ✅ ${file.name} - ${lastCommitDate} (${commits[0].sha.substring(0, 7)})`);
+                            }
+                        } else {
+                            debug(`   ❌ ${file.name} - 无法获取提交信息`);
+                        }
+                        
+                        // 添加小延迟避免API限制
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        
+                    } catch (error) {
+                        debug(`   ⚠️ ${file.name} - 获取时间戳失败: ${error.message}`);
+                    }
+                }
+                
+                if (filesWithTimestamp.length === 0) {
+                    throw new Error('无法获取任何文件的时间戳');
+                }
+                
+                statusEl.textContent = '正在排序文件...';
+                
+                // 按时间戳排序（最新的在前）
+                filesWithTimestamp.sort((a, b) => b.timestamp - a.timestamp);
+                
+                debug('\n📋 按时间戳排序的文件列表:');
+                filesWithTimestamp.forEach((file, index) => {
+                    const date = new Date(file.timestamp).toLocaleString('zh-CN');
+                    debug(`   ${index + 1}. ${file.name}`);
+                    debug(`      时间: ${date}`);
+                    debug(`      SHA: ${file.sha}${index === 0 ? ' ← 最新' : ''}`);
+                });
+                
+                const latestFile = filesWithTimestamp[0];
+                const latestDate = new Date(latestFile.timestamp).toLocaleString('zh-CN');
+                
+                statusEl.textContent = `找到最新报告: ${latestFile.name}`;
+                debug(`\n🎯 选择最新文件: ${latestFile.name}`);
+                debug(`   最后修改: ${latestDate}`);
+                
+                // 等待2秒后跳转
                 setTimeout(() => {
                     statusEl.textContent = '正在跳转...';
                     debug(`🚀 跳转到: ./reports/${latestFile.name}`);
                     window.location.href = `./reports/${latestFile.name}`;
-                }, 3000); // 3秒延迟，方便查看调试信息
+                }, 2000);
                 
             } catch (error) {
                 console.error('获取最新报告失败:', error);
@@ -164,29 +207,68 @@
 
         function showError(errorMessage) {
             spinnerEl.style.display = 'none';
-            statusEl.textContent = '获取失败';
-            errorEl.style.display = 'block';
-            errorEl.innerHTML = `
-                错误信息: ${errorMessage}<br><br>
-                可能的原因：<br>
-                • GitHub API访问限制<br>
-                • 网络连接问题<br>
-                • 文件名格式不匹配
-            `;
+            statusEl.textContent = '获取失败，使用备用方案';
+            
+            debug(`\n🔄 启动备用方案...`);
+            
+            // 备用方案：直接尝试几个可能的最新文件名
+            const today = new Date();
+            const possibleFiles = [];
+            
+            // 生成最近3天的可能文件名
+            for (let i = 0; i < 3; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                // 常见的时间戳格式（从晚到早）
+                const timeStamps = ['2359', '1800', '1500', '1400', '1321', '1301', '1212', '1211', '1200', '1000'];
+                timeStamps.forEach(time => {
+                    possibleFiles.push(`report-${dateStr}-${time}.html`);
+                });
+            }
+            
+            debug('🔍 尝试可能的文件名:');
+            possibleFiles.forEach(file => debug(`   - ${file}`));
+            
+            tryPossibleFiles(possibleFiles);
+        }
+
+        async function tryPossibleFiles(fileList) {
+            for (const filename of fileList) {
+                try {
+                    const response = await fetch(`./reports/${filename}`, { method: 'HEAD' });
+                    if (response.ok) {
+                        debug(`✅ 找到文件: ${filename}`);
+                        statusEl.textContent = `备用方案成功: ${filename}`;
+                        setTimeout(() => {
+                            window.location.href = `./reports/${filename}`;
+                        }, 1000);
+                        return;
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+            
+            // 所有尝试都失败
+            debug('❌ 备用方案也失败了');
+            statusEl.textContent = '无法找到最新报告';
+            spinnerEl.style.display = 'none';
             
             linksEl.style.display = 'block';
             linksEl.innerHTML = `
                 <a href="https://github.com/wisdom-future/ict-weekly-reports/tree/main/reports" class="manual-link" target="_blank">
-                    手动查看所有报告
+                    查看所有报告
                 </a>
                 <a href="./reports/report-2025-06-13-1321.html" class="manual-link">
-                    直接访问最新报告
+                    尝试最新报告
                 </a>
             `;
         }
 
         // 页面加载后立即执行
-        getLatestReport();
+        getLatestReportByTimestamp();
     </script>
 </body>
 </html>
