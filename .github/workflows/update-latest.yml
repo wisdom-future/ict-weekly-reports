@@ -1,0 +1,54 @@
+name: Update Latest Report
+
+on:
+  push:
+    paths:
+      - 'reports/*.html'
+  workflow_dispatch:
+
+jobs:
+  update-latest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Find latest report
+        id: find-latest
+        run: |
+          # 找到最新的HTML报告文件
+          LATEST_FILE=$(find reports -name "*.html" -type f | sort -r | head -n 1 | xargs basename)
+          echo "latest_file=$LATEST_FILE" >> $GITHUB_OUTPUT
+          echo "找到最新文件: $LATEST_FILE"
+          
+      - name: Create simple redirect
+        run: |
+          cat > index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <meta charset="UTF-8">
+              <meta http-equiv="refresh" content="0; url=./latest.html">
+              <script>window.location.href = './latest.html';</script>
+          </head>
+          <body>
+              <p>正在跳转到最新ICT周报...</p>
+          </body>
+          </html>
+          EOF
+          
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "没有变化需要提交"
+          else
+            git commit -m "Auto-update: 最新报告 ${{ steps.find-latest.outputs.latest_file }}"
+            git push
+          fi
