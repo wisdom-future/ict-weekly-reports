@@ -1,0 +1,10 @@
+{
+  "company_name": "Example Corp",
+  "industry_category": "Technology",
+  "competitive_threat_level": "MEDIUM",
+  "innovation_index": 75.5,
+  "recent_news_count": 12,
+  "github_activity_score": 850,
+  "recent_patents_count": 3,
+  "monitor_timestamp": "2024-06-17T10:30:00Z"
+}
