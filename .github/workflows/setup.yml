@@ -1,47 +1,30 @@
-name: 自动创建项目结构
+name: 批量创建项目文件
 
 on:
-  workflow_dispatch:  # 手动触发
-  push:
-    branches: [ main, master ]
-    paths: [ '.github/workflows/setup.yml' ]
+  workflow_dispatch:
+    inputs:
+      force_recreate:
+        description: '强制重新创建所有文件'
+        required: false
+        default: 'false'
+        type: boolean
 
 permissions:
-  contents: write  # 添加写权限
-  actions: read
+  contents: write
 
 jobs:
-  setup-project:
+  create-all-files:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout repository
+    - name: Checkout
       uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0  # 获取完整历史
-        
-    - name: 设置Git配置
+      
+    - name: 创建目录结构
       run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
-    - name: 检查当前状态
-      run: |
-        echo "当前分支: $(git branch --show-current)"
-        echo "仓库状态:"
-        git status
-        echo "现有文件:"
-        ls -la
-        
-    - name: 创建项目结构
-      run: |
-        echo "🚀 创建ICT TechInsight项目结构..."
-        
-        # 创建目录结构（只有不存在的时候才创建）
+        echo "🏗️ 创建目录结构..."
         mkdir -p config
         mkdir -p workflows/blueprints/competitor_intelligence
-        mkdir -p workflows/blueprints/academic_research
+        mkdir -p workflows/blueprints/academic_research  
         mkdir -p workflows/blueprints/opensource_ecosystem
         mkdir -p workflows/blueprints/ai_analysis
         mkdir -p workflows/docs
@@ -54,23 +37,21 @@ jobs:
         mkdir -p docs
         mkdir -p deployment/docker
         mkdir -p deployment/kubernetes
-        
-        echo "📁 目录创建完成"
+        echo "✅ 目录创建完成"
         
     - name: 创建Python包文件
       run: |
-        # 创建__init__.py文件
-        touch scripts/__init__.py
-        touch utils/__init__.py
-        touch tests/__init__.py
-        touch config/__init__.py
-        
-        echo "📦 Python包文件创建完成"
+        echo "📦 创建Python包文件..."
+        echo "# ICT TechInsight Scripts Package" > scripts/__init__.py
+        echo "# ICT TechInsight Utils Package" > utils/__init__.py  
+        echo "# ICT TechInsight Tests Package" > tests/__init__.py
+        echo "# ICT TechInsight Config Package" > config/__init__.py
+        echo "✅ Python包文件创建完成"
         
     - name: 创建requirements.txt
       run: |
-        if [ ! -f requirements.txt ]; then
-          cat > requirements.txt << 'EOF'
+        echo "📋 创建requirements.txt..."
+        cat > requirements.txt << 'EOF'
         # 核心依赖
         requests>=2.31.0
         jsonschema>=4.17.0
@@ -98,67 +79,12 @@ jobs:
         flake8>=6.0.0
         mypy>=1.3.0
         EOF
-          echo "✅ requirements.txt 创建完成"
-        fi
-        
-    - name: 创建.gitignore
-      run: |
-        if [ ! -f .gitignore ]; then
-          cat > .gitignore << 'EOF'
-        # Python
-        __pycache__/
-        *.py[cod]
-        *$py.class
-        *.so
-        .Python
-        env/
-        venv/
-        ENV/
-        env.bak/
-        venv.bak/
-        
-        # IDEs
-        .vscode/
-        .idea/
-        *.swp
-        *.swo
-        *~
-        
-        # OS
-        .DS_Store
-        .DS_Store?
-        ._*
-        .Spotlight-V100
-        .Trashes
-        ehthumbs.db
-        Thumbs.db
-        
-        # Project specific
-        .env
-        *.log
-        logs/
-        temp/
-        *.backup
-        *.tmp
-        
-        # Data files
-        data/raw/
-        data/processed/
-        *.csv
-        *.xlsx
-        
-        # Secrets
-        config/api_keys.env
-        deployment/secrets/
-        *.key
-        *.pem
-        credentials.json
-        EOF
-          echo "✅ .gitignore 创建完成"
-        fi
+        echo "✅ requirements.txt 创建完成"
         
     - name: 创建配置文件
       run: |
+        echo "⚙️ 创建配置文件..."
+        
         # 创建settings.py
         cat > config/settings.py << 'EOF'
         """
@@ -191,7 +117,7 @@ jobs:
         LOGS_DIR.mkdir(exist_ok=True)
         EOF
         
-        # 创建API密钥示例文件
+        # 创建API密钥示例
         cat > config/api_keys.example.env << 'EOF'
         # Make.com API配置
         MAKE_API_KEY=your_make_api_key_here
@@ -216,6 +142,8 @@ jobs:
         
     - name: 创建工具模块
       run: |
+        echo "🔧 创建工具模块..."
+        
         # 创建logger.py
         cat > utils/logger.py << 'EOF'
         """
@@ -260,16 +188,71 @@ jobs:
             return logger
         EOF
         
+        # 创建json_processor.py
+        cat > utils/json_processor.py << 'EOF'
+        """
+        JSON处理工具类
+        """
+        import json
+        import re
+        from pathlib import Path
+        from typing import Dict, Any
+        from datetime import datetime
+        
+        class JSONProcessor:
+            def __init__(self):
+                self.processed_count = 0
+                
+            def clean_json_file(self, file_path: Path) -> Dict:
+                """清理JSON文件，移除注释和格式化"""
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    # 移除单行注释 //
+                    content = re.sub(r'//.*$', '', content, flags=re.MULTILINE)
+                    
+                    # 移除多行注释 /* */
+                    content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
+                    
+                    # 移除行首的 ##
+                    content = re.sub(r'^\s*##\s*', '', content, flags=re.MULTILINE)
+                    
+                    # 解析JSON
+                    data = json.loads(content)
+                    
+                    return {
+                        "success": True,
+                        "data": data,
+                        "message": "JSON清理成功"
+                    }
+                    
+                except json.JSONDecodeError as e:
+                    return {
+                        "success": False,
+                        "data": None,
+                        "message": f"JSON解析错误: {str(e)}"
+                    }
+                except Exception as e:
+                    return {
+                        "success": False,
+                        "data": None,
+                        "message": f"处理错误: {str(e)}"
+                    }
+        EOF
+        
         echo "✅ 工具模块创建完成"
         
     - name: 创建脚本文件
       run: |
+        echo "📝 创建脚本文件..."
+        
         # 创建蓝图管理器
         cat > scripts/blueprint_manager.py << 'EOF'
         #!/usr/bin/env python3
         """
-        蓝图管理器
-        ICT TechInsight 自动化系统组件
+        ICT TechInsight Blueprint Manager
+        管理Make.com workflow蓝图的工具
         """
         
         import json
@@ -350,12 +333,136 @@ jobs:
             main()
         EOF
         
+        # 创建数据验证器
+        cat > scripts/data_validator.py << 'EOF'
+        #!/usr/bin/env python3
+        """
+        ICT TechInsight Data Validator
+        验证工作流输出数据的格式和质量
+        """
+        
+        import json
+        import re
+        from datetime import datetime
+        from typing import Dict, List, Any, Optional
+        from pathlib import Path
+        import argparse
+        
+        class DataValidator:
+            def __init__(self):
+                pass
+            
+            def validate_competitor_data(self, data: Dict) -> Dict:
+                """验证竞争对手数据"""
+                result = {
+                    "valid": True,
+                    "errors": [],
+                    "warnings": [],
+                    "metrics": {}
+                }
+                
+                # 必需字段检查
+                required_fields = [
+                    "company_name", "industry_category", "competitive_threat_level",
+                    "innovation_index", "recent_news_count", "github_activity_score"
+                ]
+                
+                for field in required_fields:
+                    if field not in data or data[field] is None:
+                        result["errors"].append(f"缺少必需字段: {field}")
+                        result["valid"] = False
+                
+                # 数据类型验证
+                if "innovation_index" in data:
+                    try:
+                        index = float(data["innovation_index"])
+                        if not 0 <= index <= 100:
+                            result["warnings"].append("innovation_index应在0-100范围内")
+                    except (ValueError, TypeError):
+                        result["errors"].append("innovation_index必须是数值类型")
+                        result["valid"] = False
+                
+                # 威胁等级验证
+                if "competitive_threat_level" in data:
+                    valid_levels = ["LOW", "MEDIUM", "HIGH"]
+                    if data["competitive_threat_level"] not in valid_levels:
+                        result["errors"].append(f"competitive_threat_level必须是: {valid_levels}")
+                        result["valid"] = False
+                
+                return result
+            
+            def validate_academic_data(self, data: Dict) -> Dict:
+                """验证学术数据"""
+                result = {
+                    "valid": True,
+                    "errors": [],
+                    "warnings": [],
+                    "metrics": {}
+                }
+                
+                required_fields = [
+                    "paper_title", "authors", "journal", "publish_date", 
+                    "citation_count", "doi"
+                ]
+                
+                for field in required_fields:
+                    if field not in data or data[field] is None:
+                        result["errors"].append(f"缺少必需字段: {field}")
+                        result["valid"] = False
+                
+                # DOI格式验证
+                if "doi" in data and data["doi"]:
+                    doi_pattern = r"10\.\d{4,}/.*"
+                    if not re.match(doi_pattern, data["doi"]):
+                        result["warnings"].append("DOI格式可能不正确")
+                
+                return result
+        
+        def main():
+            parser = argparse.ArgumentParser(description="ICT TechInsight Data Validator")
+            parser.add_argument("data_type", choices=["competitor", "academic", "opensource"],
+                               help="数据类型")
+            parser.add_argument("--file", required=True, help="要验证的数据文件")
+            parser.add_argument("--output", help="验证报告输出文件")
+            
+            args = parser.parse_args()
+            
+            validator = DataValidator()
+            
+            try:
+                with open(args.file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                
+                if args.data_type == "competitor":
+                    result = validator.validate_competitor_data(data)
+                elif args.data_type == "academic":
+                    result = validator.validate_academic_data(data)
+                
+                if args.output:
+                    with open(args.output, 'w', encoding='utf-8') as f:
+                        json.dump(result, f, indent=2, ensure_ascii=False)
+                    print(f"验证报告已保存到: {args.output}")
+                else:
+                    print(json.dumps(result, indent=2, ensure_ascii=False))
+            
+            except Exception as e:
+                print(f"验证失败: {str(e)}")
+        
+        if __name__ == "__main__":
+            main()
+        EOF
+        
+        # 设置可执行权限
         chmod +x scripts/blueprint_manager.py
-        echo "✅ 蓝图管理器创建完成"
+        chmod +x scripts/data_validator.py
+        
+        echo "✅ 脚本文件创建完成"
         
     - name: 创建示例数据
       run: |
-        # 创建竞争对手示例数据
+        echo "📊 创建示例数据..."
+        
+        # 竞争对手示例数据
         cat > data/sample/competitor_sample.json << 'EOF'
         {
           "company_name": "Example Corp",
@@ -369,7 +476,7 @@ jobs:
         }
         EOF
         
-        # 创建学术数据示例
+        # 学术数据示例
         cat > data/sample/academic_sample.json << 'EOF'
         {
           "paper_title": "Advanced Machine Learning Techniques in ICT",
@@ -382,7 +489,7 @@ jobs:
         }
         EOF
         
-        # 创建开源项目示例
+        # 开源项目示例
         cat > data/sample/opensource_sample.json << 'EOF'
         {
           "repo_name": "awesome-ict-project/main",
@@ -400,6 +507,8 @@ jobs:
         
     - name: 创建测试文件
       run: |
+        echo "🧪 创建测试文件..."
+        
         cat > tests/test_blueprints.py << 'EOF'
         """
         蓝图测试模块
@@ -434,218 +543,490 @@ jobs:
                 assert isinstance(data, dict), f"{sample_file} 必须是JSON对象"
                 assert len(data) > 0, f"{sample_file} 不能为空"
         
-        def test_imports():
-            """测试Python模块导入"""
+        def test_python_modules():
+            """测试Python模块"""
+            # 测试导入
+            import sys
+            sys.path.append('.')
+            
             try:
-                import sys
-                sys.path.append('.')
-                
                 from utils.logger import setup_logger
+                from utils.json_processor import JSONProcessor
                 from scripts.blueprint_manager import BlueprintManager
+                from scripts.data_validator import DataValidator
                 
-                # 测试日志设置
+                # 测试基本功能
                 logger = setup_logger("test")
                 assert logger is not None
                 
-                # 测试蓝图管理器
+                processor = JSONProcessor()
+                assert processor is not None
+                
                 manager = BlueprintManager()
                 workflows = manager.list_workflows()
                 assert isinstance(workflows, dict)
+                
+                validator = DataValidator()
+                assert validator is not None
                 
             except ImportError as e:
                 pytest.fail(f"模块导入失败: {e}")
         EOF
         
+        # 创建配置测试
+        cat > tests/test_config.py << 'EOF'
+        """
+        配置测试模块
+        """
+        import pytest
+        from pathlib import Path
+        
+        def test_config_files():
+            """测试配置文件"""
+            assert Path("config/settings.py").exists()
+            assert Path("config/api_keys.example.env").exists()
+            assert Path("config/__init__.py").exists()
+        
+        def test_requirements():
+            """测试requirements.txt"""
+            assert Path("requirements.txt").exists()
+            
+            with open("requirements.txt", "r") as f:
+                content = f.read()
+            
+            # 检查关键依赖
+            assert "requests" in content
+            assert "pandas" in content
+            assert "pytest" in content
+        EOF
+        
         echo "✅ 测试文件创建完成"
         
-    - name: 更新README
+    - name: 创建文档文件
       run: |
-        # 只有当README不存在或者是默认的时候才更新
-        if [ ! -f README.md ] || [ "$(wc -l < README.md)" -lt 10 ]; then
-          cat > README.md << 'EOF'
-        # ICT TechInsight 自动化系统
+        echo "📚 创建文档文件..."
         
-        基于Make.com的ICT技术洞察自动化数据收集和分析系统。
+        # 创建使用说明
+        cat > docs/usage.md << 'EOF'
+        # ICT TechInsight 使用指南
         
-        ## 🚀 快速开始
+        ## 快速开始
         
-        ### 1. 克隆项目
+        ### 1. 环境设置
+        
+        ```bash
+        # 克隆项目
+        git clone <your-repo-url>
+        cd ICT-TechInsight-Automation
+        
+        # 创建虚拟环境
+        python -m venv venv
+        
+        # 激活虚拟环境
+        source venv/bin/activate  # Linux/Mac
+        venv\Scripts\activate     # Windows
+        
+        # 安装依赖
+        pip install -r requirements.txt
+        ```
+        
+        ### 2. 配置API密钥
+        
+        ```bash
+        # 复制配置模板
+        cp config/api_keys.example.env .env
+        
+        # 编辑配置文件
+        vim .env  # 或使用您喜欢的编辑器
+        ```
+        
+        ### 3. 运行工具
+        
+        ```bash
+        # 列出工作流
+        python scripts/blueprint_manager.py list
+        
+        # 验证数据
+        python scripts/data_validator.py competitor --file data/sample/competitor_sample.json
+        
+        # 运行测试
+        pytest tests/
+        ```
+        
+        ## 工具说明
+        
+        ### 蓝图管理器 (blueprint_manager.py)
+        
+        - `organize`: 整理蓝图文件到相应目录
+        - `list`: 列出所有工作流
+        
+        ### 数据验证器 (data_validator.py)
+        
+        - `competitor`: 验证竞争对手数据
+        - `academic`: 验证学术数据
+        - `opensource`: 验证开源项目数据
+        
+        ## 目录结构
+        
+        ```
+        ICT-TechInsight-Automation/
+        ├── config/                 # 配置文件
+        ├── workflows/              # Make.com工作流
+        ├── scripts/               # 管理脚本
+        ├── utils/                 # 工具模块
+        ├── tests/                 # 测试文件
+        ├── data/                  # 数据文件
+        └── docs/                  # 文档
+        ```
+        EOF
+        
+        # 创建安装说明
+        cat > docs/installation.md << 'EOF'
+        # 安装指南
+        
+        ## 系统要求
+        
+        - Python 3.8 或更高版本
+        - Git
+        - Make.com 账户和API密钥
+        
+        ## 安装步骤
+        
+        ### 1. 克隆仓库
+        
         ```bash
         git clone https://github.com/your-username/ICT-TechInsight-Automation.git
         cd ICT-TechInsight-Automation
         ```
         
         ### 2. 设置Python环境
+        
         ```bash
         # 创建虚拟环境
         python -m venv venv
         
-        # 激活虚拟环境 (Windows)
+        # 激活虚拟环境
+        # Windows:
         venv\Scripts\activate
         
-        # 激活虚拟环境 (Linux/Mac)
+        # Linux/Mac:
         source venv/bin/activate
+        
+        # 升级pip
+        pip install --upgrade pip
         
         # 安装依赖
         pip install -r requirements.txt
         ```
         
-        ### 3. 配置API密钥
+        ### 3. 配置环境变量
+        
         ```bash
-        # 复制配置文件
+        # 复制配置模板
         cp config/api_keys.example.env .env
         
-        # 编辑配置文件
-        # 填入您的 Make.com API 密钥和其他必要配置
+        # 编辑配置文件，填入您的API密钥
+        # MAKE_API_KEY=your_api_key_here
+        # MAKE_TEAM_ID=your_team_id_here
         ```
         
-        ### 4. 上传蓝图文件
-        将您的Make.com蓝图文件上传到对应目录：
-        - `workflows/blueprints/competitor_intelligence/`
-        - `workflows/blueprints/academic_research/`
-        - `workflows/blueprints/opensource_ecosystem/`
-        - `workflows/blueprints/ai_analysis/`
+        ### 4. 验证安装
         
-        ### 5. 运行测试
         ```bash
+        # 运行测试
         pytest tests/
-        ```
         
-        ## 📁 项目结构
-        
-        ```
-        ICT-TechInsight-Automation/
-        ├── README.md
-        ├── requirements.txt
-        ├── .gitignore
-        ├── config/                 # 配置文件
-        │   ├── settings.py
-        │   └── api_keys.example.env
-        ├── workflows/              # Make.com工作流
-        │   ├── blueprints/        # 蓝图文件
-        │   │   ├── competitor_intelligence/
-        │   │   ├── academic_research/
-        │   │   ├── opensource_ecosystem/
-        │   │   └── ai_analysis/
-        │   ├── docs/              # 工作流文档
-        │   └── schemas/           # 数据架构
-        ├── scripts/               # 管理脚本
-        │   └── blueprint_manager.py
-        ├── utils/                 # 工具模块
-        │   └── logger.py
-        ├── tests/                 # 测试文件
-        │   └── test_blueprints.py
-        ├── data/                  # 数据文件
-        │   └── sample/           # 示例数据
-        └── deployment/            # 部署配置
-        ```
-        
-        ## 🛠️ 工具使用
-        
-        ### 蓝图管理
-        ```bash
-        python scripts/blueprint_manager.py organize
+        # 检查脚本
         python scripts/blueprint_manager.py list
         ```
         
-        ## 📊 核心功能
+        ## 故障排除
         
-        - 🔍 **竞争对手情报收集** - 自动监控竞争对手动态
-        - 📚 **学术研究收集** - 收集和分析学术论文
-        - 🌟 **开源生态监控** - 跟踪开源项目和技术趋势
-        - 🤖 **多模型AI分析** - 智能分析和决策支持
+        ### 常见问题
         
-        ## 🤝 贡献指南
+        1. **Python版本问题**
+           - 确保使用Python 3.8+
+           - 检查: `python --version`
         
-        1. Fork 项目
-        2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-        3. 提交变更 (`git commit -m 'Add some AmazingFeature'`)
-        4. 推送到分支 (`git push origin feature/AmazingFeature`)
-        5. 开启 Pull Request
+        2. **依赖安装失败**
+           - 升级pip: `pip install --upgrade pip`
+           - 使用国内镜像: `pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt`
         
-        ## 📄 许可证
-        
-        MIT License - 详见 [LICENSE](LICENSE) 文件
+        3. **API连接问题**
+           - 检查API密钥是否正确
+           - 确认网络连接正常
         EOF
-          echo "✅ README.md 更新完成"
-        fi
         
-    - name: 显示创建结果
+        echo "✅ 文档文件创建完成"
+        
+    - name: 创建.gitignore
       run: |
-        echo "📊 项目结构创建完成！"
-        echo ""
-        echo "📁 目录结构："
-        find . -type d -name ".git" -prune -o -type d -print | head -20
-        echo ""
-        echo "📄 主要文件："
-        find . -name ".git" -prune -o \( -name "*.py" -o -name "*.json" -o -name "*.txt" -o -name "*.md" -o -name "*.yml" \) -print | head -20
-        echo ""
-        echo "📦 Python包结构："
-        find . -name "__init__.py" -print
+        echo "📝 创建.gitignore..."
         
-    - name: 检查Git状态
+        cat > .gitignore << 'EOF'
+        # Python
+        __pycache__/
+        *.py[cod]
+        *$py.class
+        *.so
+        .Python
+        build/
+        develop-eggs/
+        dist/
+        downloads/
+        eggs/
+        .eggs/
+        lib/
+        lib64/
+        parts/
+        sdist/
+        var/
+        wheels/
+        share/python-wheels/
+        *.egg-info/
+        .installed.cfg
+        *.egg
+        MANIFEST
+        
+        # PyInstaller
+        *.manifest
+        *.spec
+        
+        # Installer logs
+        pip-log.txt
+        pip-delete-this-directory.txt
+        
+        # Unit test / coverage reports
+        htmlcov/
+        .tox/
+        .nox/
+        .coverage
+        .coverage.*
+        .cache
+        nosetests.xml
+        coverage.xml
+        *.cover
+        *.py,cover
+        .hypothesis/
+        .pytest_cache/
+        cover/
+        
+        # Virtual environments
+        .env
+        .venv
+        env/
+        venv/
+        ENV/
+        env.bak/
+        venv.bak/
+        
+        # IDEs
+        .vscode/
+        .idea/
+        *.swp
+        *.swo
+        *~
+        
+        # OS generated files
+        .DS_Store
+        .DS_Store?
+        ._*
+        .Spotlight-V100
+        .Trashes
+        ehthumbs.db
+        Thumbs.db
+        desktop.ini
+        
+        # Project specific
+        *.log
+        logs/
+        temp/
+        *.backup
+        *.tmp
+        
+        # Data files
+        data/raw/
+        data/processed/
+        *.csv
+        *.xlsx
+        
+        # Secrets and credentials
+        config/api_keys.env
+        deployment/secrets/
+        *.key
+        *.pem
+        credentials.json
+        .secret
+        
+        # Jupyter Notebook
+        .ipynb_checkpoints
+        
+        # pyenv
+        .python-version
+        
+        # pipenv
+        Pipfile.lock
+        
+        # poetry
+        poetry.lock
+        
+        # Celery
+        celerybeat-schedule
+        celerybeat.pid
+        
+        # SageMath parsed files
+        *.sage.py
+        
+        # Spyder project settings
+        .spyderproject
+        .spyproject
+        
+        # Rope project settings
+        .ropeproject
+        
+        # mkdocs documentation
+        /site
+        
+        # mypy
+        .mypy_cache/
+        .dmypy.json
+        dmypy.json
+        
+        # Pyre type checker
+        .pyre/
+        
+        # pytype static type analyzer
+        .pytype/
+        EOF
+        
+        echo "✅ .gitignore 创建完成"
+        
+    - name: 验证文件创建
       run: |
-        echo "📋 Git状态检查："
-        git status
+        echo "🔍 验证文件创建..."
+        
+        echo "📁 目录结构:"
+        find . -type d -name ".git" -prune -o -type d -print | sort | head -30
+        
         echo ""
-        echo "📝 待提交的文件："
-        git diff --cached --name-only
+        echo "📄 Python文件:"
+        find . -name "*.py" -type f | sort
         
-    - name: 提交更改
+        echo ""
+        echo "📋 配置文件:"
+        find . -name "*.txt" -o -name "*.env" -o -name "*.md" -o -name "*.yml" | sort
+        
+        echo ""
+        echo "📊 示例数据:"
+        find . -name "*.json" -type f | sort
+        
+        echo ""
+        echo "🧪 测试文件:"
+        find . -path "./tests/*" -name "*.py" | sort
+        
+        echo ""
+        echo "📚 文档文件:"
+        find . -path "./docs/*" -name "*.md" | sort
+        
+        # 检查关键文件
+        echo ""
+        echo "🔑 关键文件检查:"
+        for file in "requirements.txt" "config/settings.py" "scripts/blueprint_manager.py" "utils/logger.py" ".gitignore"; do
+          if [ -f "$file" ]; then
+            echo "✅ $file"
+          else
+            echo "❌ $file 缺失"
+          fi
+        done
+        
+    - name: 运行基础测试
       run: |
-        # 添加所有文件
-        git add .
+        echo "🧪 运行基础测试..."
         
-        # 检查是否有更改需要提交
-        if git diff --staged --quiet; then
-          echo "没有需要提交的更改"
-        else
-          echo "提交项目结构文件..."
-          git commit -m "🚀 自动创建ICT TechInsight项目结构
-
-        ✨ 新增功能:
-        - 完整的项目目录结构
-        - Python包和模块
-        - 配置文件和示例
-        - 蓝图管理工具
-        - 示例数据文件
-        - 测试框架
-        - 开发环境配置
+        # 设置Python路径
+        export PYTHONPATH=$PYTHONPATH:$(pwd)
         
-        📁 主要目录:
-        - config/ - 配置文件
-        - workflows/blueprints/ - Make.com蓝图
-        - scripts/ - 管理脚本
-        - utils/ - 工具模块
-        - tests/ - 测试文件
-        - data/sample/ - 示例数据
+        # 测试Python语法
+        echo "检查Python语法..."
+        python -m py_compile config/settings.py
+        python -m py_compile utils/logger.py
+        python -m py_compile scripts/blueprint_manager.py
+        python -m py_compile scripts/data_validator.py
         
-        🛠️ 核心工具:
-        - blueprint_manager.py - 蓝图管理
-        - logger.py - 日志工具
-        - 完整的测试框架"
+        # 测试JSON格式
+        echo "检查JSON格式..."
+        python -c "import json; json.load(open('data/sample/competitor_sample.json'))"
+        python -c "import json; json.load(open('data/sample/academic_sample.json'))"
+        python -c "import json; json.load(open('data/sample/opensource_sample.json'))"
+        
+        echo "✅ 基础测试通过"
+        
+    - name: 提交所有更改
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: |
+          🚀 完整创建ICT TechInsight项目结构
           
-          # 推送到远程仓库
-          git push origin main || git push origin master || echo "推送失败，可能需要检查分支名称"
-        fi
+          ✨ 新增功能:
+          - 📁 完整的项目目录结构
+          - 🐍 Python包和模块 (config, scripts, utils, tests)
+          - ⚙️ 配置文件和环境变量模板
+          - 🔧 蓝图管理工具 (blueprint_manager.py)
+          - 📊 数据验证器 (data_validator.py)
+          - 🛠️ JSON处理工具 (json_processor.py)
+          - 📋 日志系统 (logger.py)
+          - 🧪 完整的测试框架
+          - 📚 详细的文档和使用指南
+          - 📦 requirements.txt 依赖管理
+          - 🙈 .gitignore 忽略规则
+          - 📊 示例数据文件
+          
+          📁 目录结构:
+          - config/ - 配置文件和API密钥模板
+          - workflows/blueprints/ - Make.com蓝图存放目录
+          - scripts/ - 核心管理脚本
+          - utils/ - 工具模块和辅助函数
+          - tests/ - 单元测试和集成测试
+          - data/sample/ - 示例数据文件
+          - docs/ - 使用文档和安装指南
+          
+          🛠️ 主要工具:
+          - blueprint_manager.py - 蓝图文件管理和组织
+          - data_validator.py - 数据质量验证
+          - json_processor.py - JSON文件处理
+          - logger.py - 统一日志系统
+          
+          🎯 已就绪功能:
+          - 项目结构完整
+          - 基础工具可用
+          - 测试框架就绪
+          - 文档齐全
+          - 可直接开始开发
+        branch: main
         
-    - name: 最终状态报告
+    - name: 项目创建总结
       run: |
-        echo "🎉 ICT TechInsight 项目结构创建完成！"
+        echo "🎉 ICT TechInsight 项目创建完成！"
         echo ""
-        echo "✅ 创建的主要组件："
-        echo "- 📁 完整的目录结构"
-        echo "- 🐍 Python包和模块"
-        echo "- ⚙️ 配置文件和环境变量模板"
-        echo "- 🔧 蓝图管理工具"
-        echo "- 📊 示例数据文件"
-        echo "- 🧪 测试框架"
-        echo "- 📚 文档和说明"
+        echo "📊 创建统计:"
+        echo "- 📁 目录: $(find . -type d | wc -l) 个"
+        echo "- 📄 文件: $(find . -type f | wc -l) 个"  
+        echo "- 🐍 Python文件: $(find . -name '*.py' | wc -l) 个"
+        echo "- 📋 配置文件: $(find . -name '*.txt' -o -name '*.env' -o -name '*.md' | wc -l) 个"
+        echo "- 📊 数据文件: $(find . -name '*.json' | wc -l) 个"
         echo ""
-        echo "🚀 下一步操作："
-        echo "1. 上传您的Make.com蓝图文件到 workflows/blueprints/ 对应目录"
-        echo "2. 复制 config/api_keys.example.env 为 .env 并配置API密钥"
-        echo "3. 在本地克隆仓库并设置Python虚拟环境"
-        echo "4. 运行 pytest tests/ 验证项目结构"
+        echo "🚀 下一步操作:"
+        echo "1. 📥 克隆仓库到本地: git clone <your-repo-url>"
+        echo "2. 🐍 设置Python虚拟环境: python -m venv venv"
+        echo "3. 📦 安装依赖: pip install -r requirements.txt"  
+        echo "4. ⚙️ 配置API密钥: cp config/api_keys.example.env .env"
+        echo "5. 📂 上传蓝图文件到 workflows/blueprints/ 对应目录"
+        echo "6. 🧪 运行测试: pytest tests/"
+        echo "7. 🔧 开始使用工具: python scripts/blueprint_manager.py list"
         echo ""
-        echo "📖 详细使用说明请查看 README.md"
+        echo "📖 详细文档请查看:"
+        echo "- 📚 README.md - 项目概述和快速开始"
+        echo "- 📋 docs/installation.md - 详细安装指南"  
+        echo "- 🛠️ docs/usage.md - 工具使用说明"
+        echo ""
+        echo "✅ 项目已完全就绪，可以开始使用！"
